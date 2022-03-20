@@ -86,13 +86,13 @@ class Adapter {
       throw new Error("Discovery already in progress");
     }
 
-    await this.helper.callMethod("SetDiscoveryFilter", {
+    const filters = {
       Transport: buildTypedValue("string", "le"),
-      UUIDs: serviceUUIDs
-        ? buildTypedValue("string[]", serviceUUIDs)
-        : undefined,
-    });
-
+    };
+    if (serviceUUIDs) {
+      filters["UUIDs"] = buildTypedValue("string[]", serviceUUIDs);
+    }
+    await this.helper.callMethod("SetDiscoveryFilter", filters);
     await this.helper.callMethod("StartDiscovery");
   }
 
